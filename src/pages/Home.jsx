@@ -34,9 +34,8 @@ export default function Home() {
             custom={0.08}
             className="mt-6 font-display text-[clamp(2.6rem,6vw,5rem)] font-black leading-[0.98] tracking-tight text-primary text-balance"
           >
-            <span>ANGÉLICA</span>
-            <br />
-            <span className="text-accent">TARAZONA</span>
+            <span>Angélica</span>{" "}
+            <span className="text-accent">Tarazona</span>
           </motion.h1>
 
           <motion.p
