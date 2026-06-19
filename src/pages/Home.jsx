@@ -41,10 +41,10 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Name: First + Last (italic) */}
+          {/* Name: First + Last (color distinction, no italic) */}
           <h1 className="font-display text-5xl font-semibold leading-[1.05] tracking-tight text-primary sm:text-6xl md:text-7xl">
             <span>Angélica</span>{" "}
-            <span className="italic text-accent">Tarazona</span>
+            <span className="text-accent">Tarazona</span>
           </h1>
 
           {/* Location + Status */}
