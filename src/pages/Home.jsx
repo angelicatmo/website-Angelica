@@ -72,23 +72,33 @@ export default function Home() {
 
         <div className="order-1 lg:order-2 lg:col-span-2">
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="relative mx-auto aspect-square w-full max-w-[420px]"
+            className="relative mx-auto w-full max-w-[420px]"
           >
+            {/* Back panel - rotated */}
             <div
-              className="absolute inset-[-12%] rounded-full bg-accent/25 blur-3xl"
               aria-hidden="true"
+              className="absolute -right-3 -top-3 h-full w-full rotate-6 rounded-2xl border border-accent/40 bg-gradient-to-br from-accent/10 to-accent/5"
+              style={{ aspectRatio: "4/5" }}
             />
-            <SignalPath className="absolute inset-[-18%] h-[136%] w-[136%]" />
-            <img
-              src={portrait}
-              alt="Portrait of Angélica Tarazona"
-              className="relative z-10 h-full w-full object-contain drop-shadow-[0_28px_45px_rgba(22,28,52,0.28)]"
-              width={800}
-              height={800}
-            />
+
+            {/* Front photo card - rotated opposite */}
+            <div className="relative aspect-[4/5] w-full -rotate-2 overflow-hidden rounded-2xl border-2 border-accent/50 shadow-lg">
+              <img
+                src={portrait}
+                alt="Portrait of Angélica Tarazona"
+                className="h-full w-full object-cover"
+                width={800}
+                height={800}
+              />
+            </div>
+
+            {/* Poster-stamp caption */}
+            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 -rotate-3 whitespace-nowrap rounded-full border border-accent/40 bg-primary px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-accent shadow-md sm:left-6 sm:translate-x-0">
+              + Bogotá, Colombia
+            </div>
           </motion.div>
         </div>
       </div>
