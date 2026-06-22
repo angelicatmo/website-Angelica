@@ -1,52 +1,175 @@
-import { formatNumber } from "../lib/format.js";
+import { useState } from "react";
+import saasdemandgenFB from "../assets/marketing-flows/saas-demand-gen-facebook.png";
+import saasdemandcapLI from "../assets/marketing-flows/saas-demand-captured-linkedin.png";
+import saasdemandcapFB from "../assets/marketing-flows/saas-demand-captured-facebook.png";
+import servicesdemandcap from "../assets/marketing-flows/services-demand-captured.png";
 
-export default function FunnelExplorer({ funnel }) {
-  const stages = [
-    { label: "Clicks", value: funnel.clicks },
-    { label: "Leads", value: funnel.leads },
-    { label: "MQL", value: funnel.mql },
-    { label: "SQL", value: funnel.sql },
-    { label: "Opportunities", value: funnel.opportunities },
-    { label: "Customers", value: funnel.customers },
-  ];
-  const max = stages[0].value || 1;
+const INDUSTRIES = [
+  { id: "saas", label: "SaaS B2B Software" },
+  { id: "ecommerce", label: "E-commerce" },
+  { id: "fintech", label: "Fintech" },
+  { id: "services", label: "B2B Services" },
+];
+
+const STAGES = [
+  { id: "awareness", label: "Awareness" },
+  { id: "demandGen", label: "Demand Generation" },
+  { id: "demandCap", label: "Demand Captured" },
+];
+
+const PLATFORMS = [
+  { id: "facebook", label: "Facebook" },
+  { id: "linkedin", label: "LinkedIn" },
+];
+
+const FLOWS = {
+  saas: {
+    awareness: {},
+    demandGen: {
+      facebook: { type: "image", path: saasdemandgenFB },
+      linkedin: { type: "figma", figmaUrl: "https://www.figma.com/files/team/1564504538530596337/project/485181835?fuid=1014726933089230369" },
+    },
+    demandCap: {
+      facebook: { type: "image", path: saasdemandcapFB },
+      linkedin: { type: "image", path: saasdemandcapLI },
+    },
+  },
+  ecommerce: {
+    awareness: {},
+    demandGen: {},
+    demandCap: {},
+  },
+  fintech: {
+    awareness: {},
+    demandGen: {},
+    demandCap: {},
+  },
+  services: {
+    awareness: {},
+    demandGen: {},
+    demandCap: { linkedin: { type: "image", path: servicesdemandcap }, facebook: {} },
+  },
+};
+
+export default function FunnelExplorer() {
+  const [selectedIndustry, setSelectedIndustry] = useState(null);
+  const [selectedStage, setSelectedStage] = useState(null);
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
+
+  const showPlatforms = selectedStage === "demandGen" || selectedStage === "demandCap";
+  const flow = selectedIndustry && selectedStage ? FLOWS[selectedIndustry][selectedStage] : null;
+  const content = selectedPlatform ? flow?.[selectedPlatform] : flow?.linkedin || flow?.facebook;
+  const isReady = selectedIndustry && selectedStage && (!showPlatforms || selectedPlatform);
 
   return (
     <div className="rounded-2xl border border-primary/10 bg-surface-white p-6 sm:p-8">
-      <h3 className="font-display text-lg font-bold text-primary">Funnel Explorer</h3>
+      <h3 className="font-display text-lg font-bold text-primary">Marketing Flow Explorer</h3>
       <p className="mt-1 text-sm text-ink-muted">
-        Volume at each stage, from first click to closed customer.
+        Select an industry and stage to explore the corresponding marketing flow.
       </p>
 
-      <div className="mt-7 space-y-4">
-        {stages.map((stage, i) => {
-          const widthPct = Math.max((stage.value / max) * 100, 2);
-          const prev = i > 0 ? stages[i - 1].value : null;
-          const conv = prev ? (stage.value / prev) * 100 : null;
-
-          return (
-            <div key={stage.label}>
-              <div className="flex items-baseline justify-between">
-                <span className="text-sm font-medium text-primary">{stage.label}</span>
-                <span className="flex items-baseline gap-2">
-                  {conv !== null && (
-                    <span className="text-xs text-ink-muted">{formatNumber(conv, 1)}%</span>
-                  )}
-                  <span className="font-display text-sm font-bold text-primary">
-                    {formatNumber(stage.value, stage.value < 100 ? 1 : 0)}
-                  </span>
-                </span>
-              </div>
-              <div className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-primary/5">
-                <div
-                  className="h-full rounded-full bg-accent transition-[width] duration-500 ease-out"
-                  style={{ width: `${widthPct}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
+      {/* Industry Selector */}
+      <div className="mt-7">
+        <p className="text-xs font-bold uppercase tracking-widest text-accent-dim">1. Choose an industry</p>
+        <div className="mt-3 flex flex-wrap gap-3">
+          {INDUSTRIES.map((ind) => (
+            <button
+              key={ind.id}
+              onClick={() => {
+                setSelectedIndustry(ind.id);
+                setSelectedStage(null);
+                setSelectedPlatform(null);
+              }}
+              className={`rounded-full border-2 px-5 py-2 text-sm font-semibold transition-all ${
+                selectedIndustry === ind.id
+                  ? "border-accent bg-accent text-primary"
+                  : "border-primary/20 bg-primary/5 text-primary hover:border-accent/50"
+              }`}
+            >
+              {ind.label}
+            </button>
+          ))}
+        </div>
       </div>
+
+      {/* Stage Selector */}
+      {selectedIndustry && (
+        <div className="mt-6">
+          <p className="text-xs font-bold uppercase tracking-widest text-accent-dim">2. Choose a stage</p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {STAGES.map((stage) => (
+              <button
+                key={stage.id}
+                onClick={() => {
+                  setSelectedStage(stage.id);
+                  setSelectedPlatform(null);
+                }}
+                className={`rounded-full border-2 px-5 py-2 text-sm font-semibold transition-all ${
+                  selectedStage === stage.id
+                    ? "border-accent bg-accent text-primary"
+                    : "border-primary/20 bg-primary/5 text-primary hover:border-accent/50"
+                }`}
+              >
+                {stage.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Platform Selector (only if Demand Gen or Demand Captured) */}
+      {selectedStage && showPlatforms && (
+        <div className="mt-6">
+          <p className="text-xs font-bold uppercase tracking-widest text-accent-dim">3. Choose a platform</p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {PLATFORMS.map((platform) => (
+              <button
+                key={platform.id}
+                onClick={() => setSelectedPlatform(platform.id)}
+                className={`rounded-full border-2 px-5 py-2 text-sm font-semibold transition-all ${
+                  selectedPlatform === platform.id
+                    ? "border-accent bg-accent text-primary"
+                    : "border-primary/20 bg-primary/5 text-primary hover:border-accent/50"
+                }`}
+              >
+                {platform.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Content Display */}
+      {isReady && (
+        <div className="mt-8">
+          {!content ? (
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-8 text-center">
+              <p className="font-display text-base font-semibold text-primary">En construcción</p>
+              <p className="mt-2 text-sm text-ink-muted">Este flujo aún está siendo diseñado.</p>
+            </div>
+          ) : content.type === "image" ? (
+            <img src={content.path} alt="Marketing Flow" className="w-full rounded-xl border border-primary/20" />
+          ) : content.type === "figma" ? (
+            <iframe
+              style={{ border: "1px solid var(--ds-border-neutral)" }}
+              width="100%"
+              height="600"
+              src={`${content.figmaUrl}&node-id=0%3A1&embed-host=share`}
+              allowFullScreen
+              title="Marketing Flow"
+              className="rounded-xl"
+            />
+          ) : null}
+        </div>
+      )}
+
+      {!isReady && selectedIndustry && (
+        <div className="mt-8 text-center text-sm text-ink-muted">
+          {showPlatforms && !selectedPlatform
+            ? "Selecciona una plataforma para continuar."
+            : "Selecciona una industria y un stage para continuar."}
+        </div>
+      )}
     </div>
   );
 }
