@@ -27,7 +27,7 @@ const FLOWS = {
     awareness: {},
     demandGen: {
       facebook: { type: "image", path: saasdemandgenFB },
-      linkedin: { type: "figma", figmaUrl: "https://www.figma.com/embed?embed_host=share&url=https://www.figma.com/design/mF4LailAQVGF7swEoKlnhT/SaaS-Demand-Generation" },
+      linkedin: { type: "figma", figmaUrl: "https://www.figma.com/proto/mF4LailAQVGF7swEoKlnhT/SaaS-Demand-Generation?node-id=0-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=1%3A2" },
     },
     demandCap: {
       facebook: { type: "image", path: saasdemandcapFB },
