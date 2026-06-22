@@ -27,7 +27,7 @@ const FLOWS = {
     awareness: {},
     demandGen: {
       facebook: { type: "image", path: saasdemandgenFB },
-      linkedin: { type: "figma", figmaUrl: "https://www.figma.com/files/team/1564504538530596337/project/485181835?fuid=1014726933089230369" },
+      linkedin: { type: "figma", figmaUrl: "https://www.figma.com/embed?embed_host=share&url=https://www.figma.com/design/mF4LailAQVGF7swEoKlnhT/SaaS-Demand-Generation" },
     },
     demandCap: {
       facebook: { type: "image", path: saasdemandcapFB },
@@ -151,10 +151,10 @@ export default function FunnelExplorer() {
             <img src={content.path} alt="Marketing Flow" className="w-full rounded-xl border border-primary/20" />
           ) : content.type === "figma" ? (
             <iframe
-              style={{ border: "1px solid var(--ds-border-neutral)" }}
+              style={{ border: "1px solid rgba(0,0,0,0.1)" }}
               width="100%"
-              height="600"
-              src={`${content.figmaUrl}&node-id=0%3A1&embed-host=share`}
+              height="800"
+              src={content.figmaUrl}
               allowFullScreen
               title="Marketing Flow"
               className="rounded-xl"
