@@ -63,13 +63,41 @@ const FLOWS = {
   },
 };
 
+function FullscreenModal({ image, onClose }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+      onClick={onClose}
+    >
+      <div className="relative max-h-screen max-w-6xl w-full" onClick={(e) => e.stopPropagation()}>
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 text-white text-2xl font-bold hover:opacity-70 transition-opacity"
+        >
+          ✕
+        </button>
+        <img src={image} alt="Full screen" className="w-full h-auto rounded-lg" />
+      </div>
+    </div>
+  );
+}
+
 function AccordionFlow({ content }) {
   const [expandedIdx, setExpandedIdx] = useState(null);
+  const [fullscreenImage, setFullscreenImage] = useState(null);
 
   return (
     <div className="space-y-4">
       {/* Main Image */}
-      <img src={content.main} alt="Main Flow" className="w-full rounded-xl border border-primary/20" />
+      <button
+        onClick={() => setFullscreenImage(content.main)}
+        className="w-full group relative overflow-hidden rounded-xl border border-primary/20 transition-transform hover:scale-102"
+      >
+        <img src={content.main} alt="Main Flow" className="w-full group-hover:opacity-75 transition-opacity" />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+          <span className="text-white text-sm font-semibold">Click to expand</span>
+        </div>
+      </button>
 
       {/* Accordion Sections */}
       <div className="mt-6 space-y-3">
@@ -84,12 +112,25 @@ function AccordionFlow({ content }) {
             </button>
             {expandedIdx === idx && (
               <div className="border-t border-primary/20 p-4">
-                <img src={section.image} alt={section.title} className="w-full rounded-lg" />
+                <button
+                  onClick={() => setFullscreenImage(section.image)}
+                  className="w-full group relative overflow-hidden rounded-lg transition-transform hover:scale-102"
+                >
+                  <img src={section.image} alt={section.title} className="w-full group-hover:opacity-75 transition-opacity" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                    <span className="text-white text-sm font-semibold">Click to expand</span>
+                  </div>
+                </button>
               </div>
             )}
           </div>
         ))}
       </div>
+
+      {/* Fullscreen Modal */}
+      {fullscreenImage && (
+        <FullscreenModal image={fullscreenImage} onClose={() => setFullscreenImage(null)} />
+      )}
     </div>
   );
 }
