@@ -3,6 +3,10 @@ import saasdemandgenFB from "../assets/marketing-flows/saas-demand-gen-facebook.
 import saasdemandcapLI from "../assets/marketing-flows/saas-demand-captured-linkedin.png";
 import saasdemandcapFB from "../assets/marketing-flows/saas-demand-captured-facebook.png";
 import servicesdemandcap from "../assets/marketing-flows/services-demand-captured.png";
+import saasdemandgenLI1 from "../assets/marketing-flows/ 1 saas-demand-gen-linkedin.png";
+import saasdemandgenLI2 from "../assets/marketing-flows/ 2saas-demand-gen-linkedin..png";
+import saasdemandgenLI3 from "../assets/marketing-flows/ 3 saas-demand-gen-linkedin..png";
+import saasdemandgenLI4 from "../assets/marketing-flows/ 4 saas-demand-gen-linkedin..png";
 
 const INDUSTRIES = [
   { id: "saas", label: "SaaS B2B Software" },
@@ -27,7 +31,15 @@ const FLOWS = {
     awareness: {},
     demandGen: {
       facebook: { type: "image", path: saasdemandgenFB },
-      linkedin: { type: "figma", figmaUrl: "https://www.figma.com/proto/mF4LailAQVGF7swEoKlnhT/SaaS-Demand-Generation?node-id=0-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=1%3A2" },
+      linkedin: {
+        type: "accordion",
+        main: saasdemandgenLI1,
+        sections: [
+          { title: "Download Guide", image: saasdemandgenLI2 },
+          { title: "Request Demo", image: saasdemandgenLI3 },
+          { title: "Book a Meeting", image: saasdemandgenLI4 }
+        ]
+      },
     },
     demandCap: {
       facebook: { type: "image", path: saasdemandcapFB },
@@ -50,6 +62,37 @@ const FLOWS = {
     demandCap: { linkedin: { type: "image", path: servicesdemandcap }, facebook: {} },
   },
 };
+
+function AccordionFlow({ content }) {
+  const [expandedIdx, setExpandedIdx] = useState(null);
+
+  return (
+    <div className="space-y-4">
+      {/* Main Image */}
+      <img src={content.main} alt="Main Flow" className="w-full rounded-xl border border-primary/20" />
+
+      {/* Accordion Sections */}
+      <div className="mt-6 space-y-3">
+        {content.sections.map((section, idx) => (
+          <div key={idx} className="rounded-xl border border-primary/20">
+            <button
+              onClick={() => setExpandedIdx(expandedIdx === idx ? null : idx)}
+              className="w-full bg-primary/5 px-5 py-3 text-left font-semibold text-primary transition-colors hover:bg-primary/10 flex justify-between items-center rounded-xl"
+            >
+              <span>{section.title}</span>
+              <span className={`transition-transform ${expandedIdx === idx ? "rotate-180" : ""}`}>▼</span>
+            </button>
+            {expandedIdx === idx && (
+              <div className="border-t border-primary/20 p-4">
+                <img src={section.image} alt={section.title} className="w-full rounded-lg" />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function FunnelExplorer() {
   const [selectedIndustry, setSelectedIndustry] = useState(null);
@@ -149,16 +192,8 @@ export default function FunnelExplorer() {
             </div>
           ) : content.type === "image" ? (
             <img src={content.path} alt="Marketing Flow" className="w-full rounded-xl border border-primary/20" />
-          ) : content.type === "figma" ? (
-            <iframe
-              style={{ border: "1px solid rgba(0,0,0,0.1)" }}
-              width="100%"
-              height="800"
-              src={content.figmaUrl}
-              allowFullScreen
-              title="Marketing Flow"
-              className="rounded-xl"
-            />
+          ) : content.type === "accordion" ? (
+            <AccordionFlow content={content} />
           ) : null}
         </div>
       )}
